@@ -1,7 +1,14 @@
 package com.arti.employeeservice.service;
 
+import org.springframework.hateoas.EntityModel;
+
+// hand import. Important to use static
+// WebMvcLinkBuilder for Spring MVC
+// WebFluxLinkBuilder for Spring WebFlux
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.stereotype.Service;
 
+import com.arti.employeeservice.controller.EmployeeController;
 import com.arti.employeeservice.exceptions.EmployeeNotFoundException;
 import com.arti.employeeservice.model.Employee;
 import com.arti.employeeservice.repository.EmployeeRepository;
@@ -22,8 +29,15 @@ public class EmployeeService {
         return repository.findAll();
     }
 
-    public Employee one(Long id){
-        return repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
+    public EntityModel<Employee> one(Long id){
+
+        Employee employee = repository.findById(id)
+                                .orElseThrow(() -> new EmployeeNotFoundException(id));
+
+        return EntityModel.of(employee,
+                                linkTo(methodOn(EmployeeController.class).oneEmployee(id)).withSelfRel(),
+                                linkTo(methodOn(EmployeeController.class).allEmployees()).withRel("employees")
+                                );
     }
 
     public void add(Employee employee){

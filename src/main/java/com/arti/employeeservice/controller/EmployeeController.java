@@ -1,5 +1,6 @@
 package com.arti.employeeservice.controller;
 
+import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.arti.employeeservice.model.Employee;
-import com.arti.employeeservice.repository.EmployeeRepository;
 import com.arti.employeeservice.service.EmployeeService;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public Employee oneEmployee(@PathVariable Long id){
+    public EntityModel<Employee> oneEmployee(@PathVariable Long id){
         return service.one(id);
     }
 
